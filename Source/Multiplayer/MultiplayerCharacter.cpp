@@ -9,6 +9,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Kismet/GameplayStatics.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -65,6 +66,31 @@ void AMultiplayerCharacter::BeginPlay()
 		}
 	}
 }
+
+void AMultiplayerCharacter::OpenLobby()
+{
+	UWorld* World = GetWorld();
+	
+	if(World)
+	{
+		World->ServerTravel("/Game/ThirdPerson/Maps/Lobby?listen");
+	}
+}
+
+void AMultiplayerCharacter::CallOpenLevel(const FString& Address)
+{
+	UGameplayStatics::OpenLevel(this, *Address);
+}
+
+void AMultiplayerCharacter::CallClientTravel(const FString& Address)
+{
+	APlayerController* PlayerController = GetGameInstance()->GetFirstLocalPlayerController();
+	if(PlayerController)
+	{
+		PlayerController->ClientTravel(Address, TRAVEL_Absolute);
+	}
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 // Input
